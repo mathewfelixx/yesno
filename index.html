@@ -24,6 +24,8 @@
       --maybe: #facc15;
       --idk: #818cf8;
       --hmm: #94a3b8;
+      --thankyou: #f9a8d4;
+      --heart: #fb7185;
     }
 
     html, body {
@@ -90,12 +92,16 @@
     .btn[data-val="maybe"]:active  { background: #2e2a10; border-color: var(--maybe); color: var(--maybe); }
     .btn[data-val="idk"]:active    { background: #1a1a30; border-color: var(--idk); color: var(--idk); }
     .btn[data-val="hmm"]:active    { background: #1e2228; border-color: var(--hmm); color: var(--hmm); }
+    .btn[data-val="thank you"]:active { background: #281520; border-color: var(--thankyou); color: var(--thankyou); }
+    .btn[data-val="<3"]:active     { background: #280d12; border-color: var(--heart); color: var(--heart); }
 
-    .btn.flash-yes    { background: #16301f !important; border-color: var(--yes) !important; color: var(--yes) !important; }
-    .btn.flash-no     { background: #301616 !important; border-color: var(--no) !important; color: var(--no) !important; }
-    .btn.flash-maybe  { background: #2e2a10 !important; border-color: var(--maybe) !important; color: var(--maybe) !important; }
-    .btn.flash-idk    { background: #1a1a30 !important; border-color: var(--idk) !important; color: var(--idk) !important; }
-    .btn.flash-hmm    { background: #1e2228 !important; border-color: var(--hmm) !important; color: var(--hmm) !important; }
+    .btn.flash-yes      { background: #16301f !important; border-color: var(--yes) !important; color: var(--yes) !important; }
+    .btn.flash-no       { background: #301616 !important; border-color: var(--no) !important; color: var(--no) !important; }
+    .btn.flash-maybe    { background: #2e2a10 !important; border-color: var(--maybe) !important; color: var(--maybe) !important; }
+    .btn.flash-idk      { background: #1a1a30 !important; border-color: var(--idk) !important; color: var(--idk) !important; }
+    .btn.flash-hmm      { background: #1e2228 !important; border-color: var(--hmm) !important; color: var(--hmm) !important; }
+    .btn.flash-thankyou { background: #281520 !important; border-color: var(--thankyou) !important; color: var(--thankyou) !important; }
+    .btn.flash-heart    { background: #280d12 !important; border-color: var(--heart) !important; color: var(--heart) !important; }
   </style>
 </head>
 <body>
@@ -108,6 +114,8 @@
     <button class="btn" data-val="maybe">maybe</button>
     <button class="btn" data-val="idk">idk</button>
     <button class="btn hmm" data-val="hmm">hmm</button>
+    <button class="btn hmm" data-val="thank you">thank you</button>
+    <button class="btn hmm" data-val="<3">&lt;3</button>
   </div>
 
   <script>
@@ -116,9 +124,10 @@
 
     const status = document.getElementById('status');
 
-    async function send(val) {
+    async function send(val, flashKey) {
+      flashKey = flashKey || val;
       const btn = document.querySelector(`[data-val="${val}"]`);
-      btn.classList.add(`flash-${val}`);
+      btn.classList.add(`flash-${flashKey}`);
       status.textContent = `sent: ${val}`;
       status.classList.add('sent');
 
@@ -139,14 +148,18 @@
       }
 
       setTimeout(() => {
-        btn.classList.remove(`flash-${val}`);
+        btn.classList.remove(`flash-${flashKey}`);
         status.textContent = 'tap to respond';
         status.classList.remove('sent');
       }, 1500);
     }
 
     document.querySelectorAll('.btn').forEach(btn => {
-      btn.addEventListener('click', () => send(btn.dataset.val));
+      btn.addEventListener('click', () => {
+        const val = btn.dataset.val;
+        const flashKey = val === "thank you" ? "thankyou" : val === "<3" ? "heart" : val;
+        send(val, flashKey);
+      });
     });
   </script>
 </body>
